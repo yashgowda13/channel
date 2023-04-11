@@ -94,7 +94,7 @@ class Mongo{
 
   async deleteUser(id){
     try{
-      let doc = await this.client.db("meta").collection('users').deleteOne({_id:ObjectId(id)})
+      let doc = await this.client.db("meta").collection('users').deleteOne({_id:new ObjectId(id)})
       return doc
     }
     catch(err){
@@ -126,8 +126,7 @@ class Mongo{
 
   async getUserById(id){
     try{
-      let doc = await this.client.db("meta").collection("users").findOne({_id:ObjectId(id)})
-      
+      let doc = await this.client.db("meta").collection("users").findOne({_id:new ObjectId(id)})
       if(doc==[])
         throw new Error("Super User Doesn't Exist")
       return doc
@@ -173,7 +172,7 @@ class Mongo{
 
   async getUserIdById(id){
     try{
-      let doc = await this.client.db("meta").collection("users").findOne({_id:ObjectId(id)},{_id:1})
+      let doc = await this.client.db("meta").collection("users").findOne({_id:new ObjectId(id)},{_id:1})
       if(!doc) throw new Error("No such User Exist")
       return doc._id.toString()
     }
@@ -247,7 +246,7 @@ class Mongo{
 
   async verifyNewUser(id,passHash){
     try{
-      let doc = await this.client.db("meta").collection("users").findOneAndUpdate({_id:ObjectId(id)},{$set:{passHash,invitationStatus:true}})
+      let doc = await this.client.db("meta").collection("users").findOneAndUpdate({_id:new ObjectId(id)},{$set:{passHash,invitationStatus:true}})
       if(doc) return doc
     }
     catch(err){
@@ -266,7 +265,7 @@ class Mongo{
 
   async userPermissionOfChannel(id, channel, permission){
     try{
-      let doc = await this.client.db("meta").collection("users").findOne({_id:ObjectId(id)}, {accesses:1})
+      let doc = await this.client.db("meta").collection("users").findOne({_id:new ObjectId(id)}, {accesses:1})
       if(!doc) throw new Error(404)
       if(!doc.accesses[channel]) return false
       if(permission.read && !doc.accesses[channel].read) return false
@@ -283,7 +282,7 @@ class Mongo{
 
   async isUserCreatedPost(postId, channel, userId){
     try{
-      let postData = await this.client.db('channels').collection(channel).findOne({_id:ObjectId(postId)})
+      let postData = await this.client.db('channels').collection(channel).findOne({_id:new ObjectId(postId)})
       console.log(postData.authorId!=userId)
       if(postData.authorId!=userId) return false
       return true;
@@ -308,7 +307,7 @@ class Mongo{
 
   async addPostToChannel(id, channel, content){
     try{
-      let user = await this.client.db('meta').collection("users").findOne({_id:ObjectId(id)},{name:1})
+      let user = await this.client.db('meta').collection("users").findOne({_id:new ObjectId(id)},{name:1})
       if(!user) throw new Error("User Doesn't Exist")
       let docs = await this.client.db('channels').collection(channel).insertOne({
         content, createdBy:user.name, creationTimestamp:Date.now(), authorId:id
@@ -322,7 +321,7 @@ class Mongo{
 
   async editPostOfChannel(channel,postId, content){
     try{
-      let doc = await this.client.db('channels').collection(channel).findOneAndUpdate({_id:ObjectId(postId)},{$set:{content, creationTimestamp:Date.now()}})
+      let doc = await this.client.db('channels').collection(channel).findOneAndUpdate({_id:new ObjectId(postId)},{$set:{content, creationTimestamp:Date.now()}})
       if(doc) return doc
     }
     catch(err){
@@ -332,7 +331,7 @@ class Mongo{
 
   async deletePostOfChannel(channel,postId){
     try{
-      let docs = await this.client.db('channels').collection(channel).deleteOne({_id:ObjectId(postId)})
+      let docs = await this.client.db('channels').collection(channel).deleteOne({_id:new ObjectId(postId)})
       return {acknowledged:true}
     }
     catch(err){

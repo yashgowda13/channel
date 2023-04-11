@@ -28,7 +28,7 @@ app.delete('/api/users/invited', async (req, res) => {
 app.put('/api/users/invited', async (req, res) => {
 	try {
 		let decoded = jwt.verify(req.cookies.session, process.env.JWT_SECRET);
-		if (!decoded?.superUser) throw new Error('Unauthorised su');
+		if (!decoded?.superUser) throw new Error('Unauthorised');
 		var { name, email, accesses } = req.body;
     console.log({body:req.body})
     for (let channel of Object.keys(JSON.stringify(accesses)))
@@ -89,7 +89,8 @@ app.patch('/api/users/invited', async (req, res) => {
 		let decoded = jwt.verify(req.cookies.session, process.env.JWT_SECRET);
 		if (!decoded?.superUser) throw new Error('Unauthorised');
 		var { name, email, accesses } = req.body;
-		for (channel of Object.keys(accesses))
+		console.log(Object.keys(accesses))
+		for (let channel of Object.keys(accesses))
 			if (
 				!accesses[channel].read &&
 				!accesses[channel].write &&

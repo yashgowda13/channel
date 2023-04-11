@@ -19,7 +19,7 @@ app.post('/api/channels/name', async (req, res) => {
 	}
 });
 
-app.post('/api/channels/', async (req, res) => {
+app.post('/api/channels', async (req, res) => {
 	try {
 		let decoded = jwt.verify(req.cookies.session, process.env.JWT_SECRET);
 		if (!decoded?.superUser) throw new Error('Unauthorised');

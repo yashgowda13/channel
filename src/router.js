@@ -9,12 +9,20 @@ export default createRouter({
       component: Home,
     },
     {
-      path: '/about',
-      component: () => import('@/views/About.vue'),
+      path: '/login',
+      component: () => import('@/views/Login.vue'),
     },
     {
-      path: '/contact',
-      component: () => import('@/views/Contact.vue'),
+      path: '/admin',
+      component: () => import('@/views/Admin.vue'),
     },
+    {
+      path: '/channels',
+      component: () => import('@/views/Channels.vue'),
+    },
+    {
+      path: '/channel/:name',
+      component: () => import('@/views/Channel.vue'),
+    }
   ],
 })

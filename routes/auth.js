@@ -4,9 +4,10 @@ var app = Router();
 
 app.post('/api/jwtverify', (req, res) => {
 	try {
-		jwt.verify(req.body.token, process.env.JWT_SECRET);
+		jwt.verify(req.cookies.session, process.env.JWT_SECRET);
 		res.sendStatus(200);
 	} catch (err) {
+		console.log(err)
 		res.sendStatus(403);
 	}
 });
@@ -39,7 +40,6 @@ app.post('/api/issuperuser', async (req, res) => {
 	try {
 		let decoded = jwt.verify(req.cookies.session, process.env.JWT_SECRET);
 		if (!decoded?.superUser) throw new Error('Unauthorised');
-		/* if(!await dbase.isUserSuperUser(decoded.id)) throw new Error("Unauthorised") */
 		res.json({ status: 'ok' });
 	} catch (err) {
 		res.status(403).json({ code: 403, message: 'You are not a Super User' });

@@ -16,6 +16,7 @@ app.post('/api/posts', async (req, res) => {
 					.json({ code: 403, message: 'No Read Permission for the Channel' });
 		res.json(await dbase.fetchPostsOfChannel(req.body.channel, req.body.page));
 	} catch (err) {
+		console.log(err)
 		res.status(403).json({
 			code: 403,
 			message: 'Unauthorized',
@@ -43,7 +44,7 @@ app.put('/api/posts', async (req, res) => {
 			req.body.channel,
 			req.body.content
 		);
-		if (!doc.acknowledged) throw new Error('Error Creating Post');
+		if (!doc?.acknowledged) throw new Error('Error Creating Post');
 		res.json({ status: 'ok' });
 	} catch (err) {
 		console.log(err);
@@ -93,7 +94,6 @@ app.delete('/api/posts', async (req, res) => {
 					decoded.id
 				))
 			) {
-				console.log('Reach');
 				return res
 					.status(403)
 					.json({ code: 403, message: 'This post is not created by You!' });
